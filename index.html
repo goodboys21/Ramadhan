@@ -9,27 +9,41 @@
 
         body {
             font-family: 'Amiri', serif;
-            background-color: #eafbea;
+            background: url('https://source.unsplash.com/1080x1920/?mosque,ramadan') no-repeat center center/cover;
+            color: #2d572c;
             text-align: center;
             padding: 20px;
-            color: #2d572c;
-            position: relative;
             overflow: hidden;
+            position: relative;
         }
 
         h2 {
-            font-size: 28px;
+            font-size: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
             margin-bottom: 10px;
         }
 
+        .motivasi {
+            font-size: 18px;
+            font-style: italic;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            display: inline-block;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
             display: inline-block;
             max-width: 400px;
-            margin-top: 20px;
+            transition: opacity 1s ease-in-out;
         }
 
         p {
@@ -49,17 +63,15 @@
             height: 50px;
             background: linear-gradient(45deg, #2d572c, #79c879);
             clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            opacity: 0.8;
-            animation: floating 5s infinite linear;
+            opacity: 0.7;
+            animation: floating 6s infinite ease-in-out alternate;
         }
 
         @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(20px); }
-            100% { transform: translateY(0px); }
+            0% { transform: translateY(0px); opacity: 0.8; }
+            100% { transform: translateY(20px); opacity: 1; }
         }
 
-        /* Posisi acak ketupat */
         .ketupat:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
         .ketupat:nth-child(2) { top: 20%; left: 80%; animation-delay: 1s; }
         .ketupat:nth-child(3) { top: 50%; left: 10%; animation-delay: 2s; }
@@ -77,14 +89,16 @@
     <div class="ketupat"></div>
 
     <h2>🕌 Jadwal Sholat 🕌</h2>
+    <p class="motivasi" id="motivasi">"Menunggu kutipan motivasi..."</p>
+    <p><strong>Lokasi: <span id="lokasi">Mengambil lokasi...</span></strong></p>
     
-    <div class="container">
-        <p>Imsak: <span class="time" id="imsak">Loading...</span></p>
-        <p>Subuh: <span class="time" id="subuh">Loading...</span></p>
-        <p>Dzuhur: <span class="time" id="dzuhur">Loading...</span></p>
-        <p>Ashar: <span class="time" id="ashar">Loading...</span></p>
-        <p>Maghrib: <span class="time" id="maghrib">Loading...</span></p>
-        <p>Isya: <span class="time" id="isya">Loading...</span></p>
+    <div class="container" id="jadwal">
+        <p>Imsak: <span class="time" id="imsak">Mengambil data...</span></p>
+        <p>Subuh: <span class="time" id="subuh">Mengambil data...</span></p>
+        <p>Dzuhur: <span class="time" id="dzuhur">Mengambil data...</span></p>
+        <p>Ashar: <span class="time" id="ashar">Mengambil data...</span></p>
+        <p>Maghrib: <span class="time" id="maghrib">Mengambil data...</span></p>
+        <p>Isya: <span class="time" id="isya">Mengambil data...</span></p>
     </div>
 
     <script>
@@ -100,7 +114,16 @@
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
-            // Panggil API Jadwal Sholat
+            // API untuk mendapatkan lokasi berdasarkan koordinat
+            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    let lokasi = data.address.city || data.address.county || data.address.state;
+                    document.getElementById("lokasi").innerText = lokasi;
+                })
+                .catch(error => console.error("Gagal mengambil lokasi:", error));
+
+            // API untuk mendapatkan jadwal sholat
             fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`)
                 .then(response => response.json())
                 .then(data => {
@@ -111,15 +134,29 @@
                     document.getElementById("ashar").innerText = jadwal.Asr;
                     document.getElementById("maghrib").innerText = jadwal.Maghrib;
                     document.getElementById("isya").innerText = jadwal.Isha;
+
+                    document.getElementById("jadwal").style.opacity = "1";
                 })
-                .catch(error => console.error("Gagal mengambil data:", error));
+                .catch(error => console.error("Gagal mengambil jadwal sholat:", error));
         }
 
         function showError(error) {
             alert("Gagal mendapatkan lokasi: " + error.message);
         }
 
+        function getRandomMotivation() {
+            const quotes = [
+                "Sholat adalah cahaya di kehidupanmu, jangan tinggalkan! 🌟",
+                "Allah selalu mendengar doa hamba-Nya. Jangan berhenti berdoa. 🤲",
+                "Ketika dunia terasa berat, sujudlah lebih lama. 🕌",
+                "Jangan menunda sholat, karena kita tidak tahu kapan ajal menjemput. ⏳",
+                "Semoga Allah memberkahi harimu dengan kedamaian dan keberkahan. 🌙"
+            ];
+            document.getElementById("motivasi").innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
         getLocation();
+        getRandomMotivation();
     </script>
 </body>
 </html>
