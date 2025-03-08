@@ -67,6 +67,26 @@
         .ketupat:nth-child(5) { top: 85%; left: 30%; animation-delay: 4s; }
 
     </style>
+</head>
+<body>
+    <!-- Efek Ketupat -->
+    <div class="ketupat"></div>
+    <div class="ketupat"></div>
+    <div class="ketupat"></div>
+    <div class="ketupat"></div>
+    <div class="ketupat"></div>
+
+    <h2>🕌 Jadwal Sholat 🕌</h2>
+    
+    <div class="container">
+        <p>Imsak: <span class="time" id="imsak">Loading...</span></p>
+        <p>Subuh: <span class="time" id="subuh">Loading...</span></p>
+        <p>Dzuhur: <span class="time" id="dzuhur">Loading...</span></p>
+        <p>Ashar: <span class="time" id="ashar">Loading...</span></p>
+        <p>Maghrib: <span class="time" id="maghrib">Loading...</span></p>
+        <p>Isya: <span class="time" id="isya">Loading...</span></p>
+    </div>
+
     <script>
         function getLocation() {
             if (navigator.geolocation) {
@@ -98,25 +118,8 @@
         function showError(error) {
             alert("Gagal mendapatkan lokasi: " + error.message);
         }
-    </script>
-</head>
-<body onload="getLocation()">
-    <!-- Efek Ketupat -->
-    <div class="ketupat"></div>
-    <div class="ketupat"></div>
-    <div class="ketupat"></div>
-    <div class="ketupat"></div>
-    <div class="ketupat"></div>
 
-    <h2>🕌 Jadwal Sholat 🕌</h2>
-    
-    <div class="container">
-        <p>Imsak: <span class="time" id="imsak">Loading...</span></p>
-        <p>Subuh: <span class="time" id="subuh">Loading...</span></p>
-        <p>Dzuhur: <span class="time" id="dzuhur">Loading...</span></p>
-        <p>Ashar: <span class="time" id="ashar">Loading...</span></p>
-        <p>Maghrib: <span class="time" id="maghrib">Loading...</span></p>
-        <p>Isya: <span class="time" id="isya">Loading...</span></p>
-    </div>
+        getLocation();
+    </script>
 </body>
 </html>
